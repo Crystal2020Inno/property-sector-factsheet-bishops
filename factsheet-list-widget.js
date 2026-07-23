@@ -38,7 +38,7 @@
     link.type = "text/css";
 
     const scriptTag = document.querySelector(
-      'script[src*="factsheet-list-widget.js"]'
+      'script[src*="factsheet-list-widget.js"]',
     );
     if (scriptTag && scriptTag.src) {
       const baseUrl = scriptTag.src.replace("factsheet-list-widget.js", "");
@@ -109,7 +109,7 @@
       this.targetElement = document.getElementById(this.config.targetId);
       if (!this.targetElement) {
         console.error(
-          `FactsheetListWidget: Target element with id "${this.config.targetId}" not found`
+          `FactsheetListWidget: Target element with id "${this.config.targetId}" not found`,
         );
         return;
       }
@@ -121,9 +121,7 @@
     },
 
     render: function () {
-      const titleHTML = this.config.showTitle
-        ? `<h1>${escapeHtml(this.config.title)}</h1>`
-        : "";
+      const titleHTML = this.config.showTitle ? "" : "";
 
       this.targetElement.innerHTML = `
         ${titleHTML}
@@ -148,7 +146,7 @@
           if (!response.ok) {
             return response.json().then((errorData) => {
               throw new Error(
-                errorData.message || `HTTP error! status: ${response.status}`
+                errorData.message || `HTTP error! status: ${response.status}`,
               );
             });
           }
@@ -169,7 +167,7 @@
           renderFactsheetList(
             factsheets,
             listResult,
-            this.config.detailPageUrl
+            this.config.detailPageUrl,
           );
         })
         .catch((error) => {
