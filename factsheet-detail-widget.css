@@ -62,9 +62,11 @@
   text-align: left;
 }
 
-.factsheet-detail-widget .section-content p {
+.factsheet-detail-widget .section-content p,
+.factsheet-detail-widget .detail-intro p,
+.factsheet-detail-widget p.factsheet-detail-p {
   margin: 15px 0;
-  text-align: left;
+  text-align: left !important;
 }
 
 .factsheet-detail-widget .detail-link {

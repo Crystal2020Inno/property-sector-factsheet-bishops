@@ -90,6 +90,10 @@
       });
     });
 
+    temp.querySelectorAll("p").forEach((p) => {
+      p.classList.add("factsheet-detail-p");
+    });
+
     return temp.innerHTML;
   }
 
