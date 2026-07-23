@@ -35,7 +35,9 @@
     link.rel = "stylesheet";
     link.type = "text/css";
 
-    const scriptTag = document.querySelector('script[src*="factsheet-detail-widget.js"]');
+    const scriptTag = document.querySelector(
+      'script[src*="factsheet-detail-widget.js"]',
+    );
     if (scriptTag && scriptTag.src) {
       const baseUrl = scriptTag.src.replace("factsheet-detail-widget.js", "");
       link.href = baseUrl + "factsheet-detail-widget.css";
@@ -55,29 +57,39 @@
 
   function sanitizeHtml(html) {
     if (typeof html !== "string") return html;
-    
+
     const temp = document.createElement("div");
     temp.innerHTML = html;
-    
-    const dangerousTags = ["script", "iframe", "object", "embed", "form", "input", "button"];
+
+    const dangerousTags = [
+      "script",
+      "iframe",
+      "object",
+      "embed",
+      "form",
+      "input",
+      "button",
+    ];
     dangerousTags.forEach((tag) => {
       const elements = temp.querySelectorAll(tag);
       elements.forEach((el) => el.remove());
     });
-    
+
     const allElements = temp.querySelectorAll("*");
     allElements.forEach((el) => {
       Array.from(el.attributes).forEach((attr) => {
         if (
           attr.name.startsWith("on") ||
-          (attr.name === "href" && attr.value.toLowerCase().startsWith("javascript:")) ||
-          (attr.name === "src" && attr.value.toLowerCase().startsWith("javascript:"))
+          (attr.name === "href" &&
+            attr.value.toLowerCase().startsWith("javascript:")) ||
+          (attr.name === "src" &&
+            attr.value.toLowerCase().startsWith("javascript:"))
         ) {
           el.removeAttribute(attr.name);
         }
       });
     });
-    
+
     return temp.innerHTML;
   }
 
@@ -97,8 +109,8 @@
                   .map(
                     (content) =>
                       `<div class="section-content">${sanitizeHtml(
-                        content
-                      )}</div>`
+                        content,
+                      )}</div>`,
                   )
                   .join("")
               : ""
@@ -124,15 +136,7 @@
         ${createdAt ? `<p class="detail-date">Published: ${createdAt}</p>` : ""}
         <div class="detail-intro">${sanitizeHtml(intro)}</div>
         ${formatSections(sections)}
-        ${
-          link
-            ? `<p class="detail-link"><a href="${escapeHtml(
-                link
-              )}" target="_blank" rel="noopener noreferrer">View Link: ${escapeHtml(
-                link
-              )}</a></p>`
-            : ""
-        }
+        
       </div>
     `;
   }
@@ -158,7 +162,8 @@
         console.error("FactsheetDetailWidget: Factsheet ID is required");
         const target = document.getElementById(this.config.targetId);
         if (target) {
-          target.innerHTML = '<div class="error">Error: Factsheet ID not found. Please provide an ID in the URL (?id=...) or in the init options.</div>';
+          target.innerHTML =
+            '<div class="error">Error: Factsheet ID not found. Please provide an ID in the URL (?id=...) or in the init options.</div>';
         }
         return;
       }
@@ -166,7 +171,7 @@
       this.targetElement = document.getElementById(this.config.targetId);
       if (!this.targetElement) {
         console.error(
-          `FactsheetDetailWidget: Target element with id "${this.config.targetId}" not found`
+          `FactsheetDetailWidget: Target element with id "${this.config.targetId}" not found`,
         );
         return;
       }
@@ -205,32 +210,42 @@
                   Authorization: `Bearer ${this.config.apiKey}`,
                   "Content-Type": "application/json",
                 },
-              }).then((listResponse) => {
-                if (!listResponse.ok) throw new Error(`HTTP error! status: ${listResponse.status}`);
-                return listResponse.json();
-              }).then((listData) => {
-                if (!listData || !listData.data || !listData.data.factsheets) {
-                  throw new Error("Unexpected response structure");
-                }
-                const factsheet = listData.data.factsheets.find(
-                  (f) => (f._id || f.id) === id
-                );
-                if (!factsheet) {
-                  throw new Error("Factsheet not found");
-                }
-                return { data: { factsheet } };
-              });
+              })
+                .then((listResponse) => {
+                  if (!listResponse.ok)
+                    throw new Error(
+                      `HTTP error! status: ${listResponse.status}`,
+                    );
+                  return listResponse.json();
+                })
+                .then((listData) => {
+                  if (
+                    !listData ||
+                    !listData.data ||
+                    !listData.data.factsheets
+                  ) {
+                    throw new Error("Unexpected response structure");
+                  }
+                  const factsheet = listData.data.factsheets.find(
+                    (f) => (f._id || f.id) === id,
+                  );
+                  if (!factsheet) {
+                    throw new Error("Factsheet not found");
+                  }
+                  return { data: { factsheet } };
+                });
             }
             return response.json().then((errorData) => {
               throw new Error(
-                errorData.message || `HTTP error! status: ${response.status}`
+                errorData.message || `HTTP error! status: ${response.status}`,
               );
             });
           }
           return response.json();
         })
         .then((data) => {
-          const factsheet = data.data?.factsheet || data.data?.factsheets?.[0] || data;
+          const factsheet =
+            data.data?.factsheet || data.data?.factsheets?.[0] || data;
           if (!factsheet) {
             detailResult.innerHTML = `
               <div class="error">Error: Factsheet not found</div>
@@ -249,4 +264,3 @@
 
   window.FactsheetDetailWidget = FactsheetDetailWidget;
 })(window);
-

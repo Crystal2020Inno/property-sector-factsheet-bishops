@@ -22,7 +22,7 @@
   color: #333;
   margin: 0 0 15px 0;
   font-size: 2em;
-  border-bottom: 2px solid #4caf50;
+  border-bottom: 2px solid #bfaad2;
   padding-bottom: 15px;
   text-align: left;
 }
@@ -75,7 +75,7 @@
 }
 
 .factsheet-detail-widget .detail-link a {
-  color: #4caf50;
+  color: #bfaad2;
   text-decoration: none;
   font-weight: bold;
 }
